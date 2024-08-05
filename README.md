@@ -32,7 +32,7 @@ The quantisation here is the source of the (negligible) difference in accuracy b
 ### Setup
 - Requires download of [this](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud/download?datasetVersionNumber3) dataset.
 	- Save as `creditcard.csv` in root folder.
-- Requires compiled Optalysys hardware API (download [here](https://github.com/Optalysys-Ltd/Demo_2023_cpu), instructions for build [here](https://app.gitbook.com/o/bEvcde7f23Rb4MbiFmMC/s/qC31JN0hBICHfQGnpyZu/getting-access-to-the-api-and-materials/building_api))
+- Requires compiled Optalysys hardware API (download [here](https://web.app.explore.optalysys.com/downloads.html), instructions for build [here](https://web.app.explore.optalysys.com/getting_started/installation.html))
 
 ### Running
 In order to see the demo in action:
