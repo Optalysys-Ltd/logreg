@@ -1,0 +1,41 @@
+# Logistic regression over encrypted data
+This is a demonstration of a logistic regression model operating over encrypted data, written in the Python interface of the [Optalysys beta API](https://optalysys.gitbook.io/optalysys-accelerator-documentation/QQvmmApy5f2RR4eiSHLZ/) (Click link to find out more).
+The model is trained on a [dataset](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud/data)[^1][^2] of legitimate and fraudulent credit card transactions made by European cardholders in 2013.
+
+Our model was able to achieve ~95% accuracy in fraud detection under FHE with a negligible drop from conventional plaintext accuracy arising from quantisation.
+Each inference took ~0.4 seconds on our FPGA accelerator. To bring this capability to a level that can work with live processing, we expect that this task would need to be executed in below 100 milliseconds, a metric that will be achieved with our continued development of our FPGA accelerators.
+This demonstrates a real-world use case which is ready to be used now, but also demonstrates the possibility of larger ML models in the future such as NNs which are constructed from logistic regression nodes.
+
+[^1]:Contains information from the "Credit Card Fraud Detection" database, which is made available here under the [Open Database License](https://opendatacommons.org/licenses/odbl/1-0/) (ODbL).
+[^2]: This is not included in the repository and requires downloading as described in the setup section.
+
+## Fraud Detection Demo
+The envisioned workflow for a real world application is as follows:
+
+![Cloud encrypted fraud detection](Architecture_Diagram.png)
+1. The client (e.g. the bank) has a list of confidential transactions that it wants to check for fraudulent activity.
+2. The client coverts the data into a format accepted by our hardware accelerator using quantisation techniques.
+3. The data is then encrypted using secure parameters under TFHE. Alongside this, a server key is generated.
+4. The client sends the encrypted transaction data to a third party (potentially another bank to allow collaborative fraud checking)  which then sends the weights and biases along with the clients data to the Optalysys cloud accelerator.
+5. Optalysys cloud accelerator performs homomorphic operations to classify encrypted transactions as fraudulent or not and returns an encrypted answer to the client.
+6. Client decrypts result of classification.
+
+### Demo Structure
+The workflow presented here is different for ease of demonstration, but this could easily be adapted to a real world scenario.
+In the demo, the model is trained during runtime by the client and the weights are sent to the server, this is done to simplify comparison between predicion on cipher/plain-text.
+For simplicity's sake, this demo contains no net-code but simulates an end-to-end encrypted flow through the splitting of server and client-side code.
+
+### Quantisation
+The architecture of our accelerator and the constraints of TFHE require integer inputs of bounded size. In this demo, we quantise the inputs and weights of the model to `int8`. This is done by `client.py` before sending the inputs and weights to the server. In the real-world use case, the weights would be quantised on the server before runtime, this is fine as the quantisation scale does not have the be the same for the weights and inputs.
+The quantisation here is the source of the (negligible) difference in accuracy between the plaintext and encrypted models. Additional information about quantising ML models for use on our architecture can be found [here]()(WIP).
+
+### Setup
+- Requires download of [this](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud/download?datasetVersionNumber3) dataset.
+	- Save as `creditcard.csv` in root folder.
+- Requires compiled Optalysys hardware API (download [here](https://github.com/Optalysys-Ltd/Demo_2023_cpu), instructions for build [here](https://app.gitbook.com/o/bEvcde7f23Rb4MbiFmMC/s/qC31JN0hBICHfQGnpyZu/getting-access-to-the-api-and-materials/building_api))
+
+### Running
+In order to see the demo in action:
+- Run client.py
+- Run server.py
+- Run client\_decrypt.py
