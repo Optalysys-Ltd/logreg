@@ -3,8 +3,6 @@ This is a demonstration of a logistic regression model operating over encrypted 
 The model is trained on a [dataset](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud/data)[^1][^2] of legitimate and fraudulent credit card transactions made by European cardholders in 2013.
 
 Our model was able to achieve ~95% accuracy in fraud detection under FHE with a negligible drop from conventional plaintext accuracy arising from quantisation.
-Each inference took ~0.4 seconds on our FPGA accelerator. To bring this capability to a level that can work with live processing, we expect that this task would need to be executed in below 100 milliseconds, a metric that will be achieved with our continued development of our FPGA accelerators.
-This demonstrates a real-world use case which is ready to be used now, but also demonstrates the possibility of larger ML models in the future such as NNs which are constructed from logistic regression nodes.
 
 [^1]:Contains information from the "Credit Card Fraud Detection" database, which is made available here under the [Open Database License](https://opendatacommons.org/licenses/odbl/1-0/) (ODbL).
 [^2]: This is not included in the repository and requires downloading as described in the setup section.
@@ -31,11 +29,21 @@ The quantisation here is the source of the (negligible) difference in accuracy b
 
 ### Setup
 - Requires download of [this](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud/download?datasetVersionNumber3) dataset.
-	- Save as `creditcard.csv` in root folder.
-- Requires compiled Optalysys hardware API (download [here](https://web.app.explore.optalysys.com/downloads.html), instructions for build [here](https://web.app.explore.optalysys.com/getting_started/installation.html))
+	- Save as `creditcard.csv` in scripts folder.
+- Requires installed Explore SDK (download [here](https://web.app.explore.optalysys.com/downloads.html), instructions for installation [here](https://web.app.explore.optalysys.com/getting_started/installation.html))
 
 ### Running
 In order to see the demo in action:
 - Run client.py
+    - Splits whole dataset into training data and testing data
+    - Trains machine learning model in the clear on training data
+    - Runs inference on testing data in clear to provide accuracy baseline
+    - Encrypts testing dataset ready for use in later steps
 - Run server.py
+    - Reads in encrypted testing dataset
+    - Runs logistic classification on encrypted testing dataset
+    - Returns encrypted classification results
 - Run client\_decrypt.py
+    - Reads in encrypted results
+    - Decrypts results
+    - Displays result of homomorphic evaluation against real classification of each transaction
