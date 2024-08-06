@@ -66,4 +66,7 @@ cd scripts
 
 python3 client.py 1
 
-ex[
+explore run --name explore_fraud_demo spec circuit.py ../input/*
+
+python3 client_decrypt explore_fraud_demo
+```
