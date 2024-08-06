@@ -32,7 +32,8 @@ The quantisation here is the source of the (negligible) difference in accuracy b
 	- Save as `creditcard.csv` in scripts folder.
 - Requires installed Explore SDK (download [here](https://web.app.explore.optalysys.com/downloads.html), instructions for installation [here](https://web.app.explore.optalysys.com/getting_started/installation.html))
 
-### Running
+### Running locally
+
 In order to see the demo in action:
 - Run client.py
     - Splits whole dataset into training data and testing data
@@ -47,3 +48,22 @@ In order to see the demo in action:
     - Reads in encrypted results
     - Decrypts results
     - Displays result of homomorphic evaluation against real classification of each transaction
+
+```
+cd scripts 
+
+python3 client.py 1
+
+python3 circuit.py local_fraud_demo
+
+python3 client_decrypt local_fraud_demo
+```
+
+### Running on Explore
+
+```
+cd scripts
+
+python3 client.py 1
+
+ex[
